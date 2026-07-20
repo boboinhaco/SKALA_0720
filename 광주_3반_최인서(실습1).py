@@ -1,5 +1,6 @@
 """
 프로그램명: Practice 1
+작성자 : 광주_3반_최인서
 전체 설명:
     매출 데이터를 활용해 지역별·카테고리별·월별 매출을 집계하고,
     리스트와 제너레이터의 메모리 크기를 비교한다.
@@ -44,7 +45,7 @@ EXPECTED_COUNT_ORDER = [
 ]
 
 
-# 데이터 파일을 읽고 형식을 검사한다.
+# 데이터 파일을 읽고 형식을 검사
 def load_sales(path: Path) -> list[dict]:
     try:
         text = path.read_text(encoding="utf-8")
@@ -92,14 +93,14 @@ def load_sales(path: Path) -> list[dict]:
     return sales
 
 
-# amount가 1000보다 큰 거래를 한 건씩 반환한다.
+# amount가 1000보다 큰 거래를 한 건씩 반환
 def yield_high_amount(sales: list[dict]):
     for row in sales:
         if row["amount"] > 1000:
             yield row
 
 
-# 실습 전체 과정을 실행한다.
+# 실습 전체 과정
 def main() -> None:
     try:
         sales = load_sales(DATA_FILE)
@@ -142,7 +143,7 @@ def main() -> None:
             for month, category_total in sorted(month_category_total.items())
         }
 
-        # 지역별 총매출을 한 번만 정렬해 출력과 테스트에 함께 사용한다.
+        # 지역별 총매출을 한 번만 정렬해 출력과 테스트에 함께 사용
         sorted_region_total = sorted(
             region_total.items(),
             key=lambda item: item[1],
