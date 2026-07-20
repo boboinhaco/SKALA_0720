@@ -1,0 +1,14 @@
+[
+  {
+    "row": 5,
+    "error": "1 validation error for SalesRecord\nmonth\n  Value error, 비어 있을 수 없습니다. [type=value_error, input_value='', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+  },
+  {
+    "row": 6,
+    "error": "1 validation error for SalesRecord\nregion\n  Value error, 비어 있을 수 없습니다. [type=value_error, input_value='', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+  },
+  {
+    "row": 7,
+    "error": "1 validation error for SalesRecord\namount\n  Input should be greater than 0 [type=greater_than, input_value='0', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than"
+  }
+]
