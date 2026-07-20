@@ -1,5 +1,6 @@
 """
 프로그램명: Practice 2
+작성자 : 광주_3반_최인서
 전체설명:
     CSV 데이터를 안전하게 읽고 Pydantic v2로 검증한 뒤,
     정상 데이터는 CSV로, 오류 데이터는 JSON으로 저장하고 재검증한다.
@@ -41,7 +42,7 @@ RAW_DATA = [
 ]
 
 
-# 월·지역·금액을 검증하는 매출 데이터 모델
+# 월·지역·금액을 검증하는 매출 데이터 모델 (Pydantic v2 스키마 정의)
 class SalesRecord(BaseModel):
 
     month: str
@@ -49,7 +50,7 @@ class SalesRecord(BaseModel):
     amount: float = Field(gt=0)
     category: str | None = None
 
-    # month와 region은 공백 문자열도 허용하지 않는다.
+    # month와 region은 공백 문자열도 허용x
     @field_validator("month", "region")
     @classmethod
     def validate_required_text(cls, value: str) -> str:
@@ -58,14 +59,14 @@ class SalesRecord(BaseModel):
             raise ValueError("비어 있을 수 없습니다.")
         return value
 
-    # CSV의 빈 category를 None으로 변환한다.
+    # CSV의 빈 category를 None으로 변환
     @field_validator("category", mode="before")
     @classmethod
     def empty_category_to_none(cls, value: object) -> object:
         return None if value == "" else value
 
 
-# 실습용 raw_data를 CSV 파일로 저장한다.
+# 실습용 raw_data를 CSV 파일로 저장
 def create_input_csv(path: Path, rows: list[dict]) -> None:
     fieldnames = ["month", "region", "amount", "category"]
 
@@ -79,7 +80,7 @@ def create_input_csv(path: Path, rows: list[dict]) -> None:
         raise OSError(f"입력 CSV 저장 실패: {error}") from error
 
 
-# CSV 파일을 안전하게 읽고 dict 리스트로 반환한다.
+# CSV 파일을 안전하게 읽고 dict 리스트로 반환
 def safe_load_csv(path: Path) -> list[dict[str, str]] | None:
     try:
         with path.open(newline="", encoding="utf-8-sig") as file:
@@ -97,7 +98,7 @@ def safe_load_csv(path: Path) -> list[dict[str, str]] | None:
         print("로딩 종료")
 
 
-# Pydantic 검증 결과를 valid와 errors로 분리한다.
+# Pydantic 검증 결과를 valid와 errors로 분리
 def validate_records(
     raw_data: list[dict[str, str]],
 ) -> tuple[list[SalesRecord], list[dict[str, object]]]:
@@ -115,7 +116,7 @@ def validate_records(
     return valid, errors
 
 
-# 정상 데이터는 CSV, 오류 데이터는 JSON으로 저장한다.
+# 정상 데이터는 CSV, 오류 데이터는 JSON으로 저장
 def save_results(
     valid: list[SalesRecord],
     errors: list[dict[str, object]],
@@ -143,7 +144,7 @@ def main() -> None:
     try:
         create_input_csv(INPUT_FILE, RAW_DATA)
 
-        # 존재하지 않는 파일은 None을 반환해야 한다.
+        # 존재하지 않는 파일은 None을 반환
         assert safe_load_csv(BASE_DIR / "missing.csv") is None
 
         raw_data = safe_load_csv(INPUT_FILE)
@@ -157,7 +158,7 @@ def main() -> None:
         if reloaded is None:
             raise RuntimeError("저장한 정상 데이터를 다시 읽지 못했습니다.")
 
-        # 교재 Checkpoint
+        # 테스트 데이터와 출력 결과 비교 확인
         assert len(valid) == 4, "valid 데이터는 4건이어야 합니다."
         assert len(errors) == 3, "errors 데이터는 3건이어야 합니다."
         assert len(reloaded) == 4, "재로딩된 데이터는 4건이어야 합니다."
