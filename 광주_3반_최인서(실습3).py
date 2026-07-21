@@ -11,7 +11,7 @@ import duckdb
 # csv 경로 (실행 위치와 무관하게 스크립트 폴더 기준)
 CSV = Path(__file__).resolve().parent / "sales_100k.csv"
 # 세 도구 공통 반복 횟수 (공정 비교 위해 통일)
-NUMBER = 5
+NUMBER = 7
 GROUP_KEYS = ["region", "category"]
 NEEDED = GROUP_KEYS + ["amount"]
 
